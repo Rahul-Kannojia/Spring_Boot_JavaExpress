@@ -2,7 +2,10 @@ package com.app.services;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+
 import com.app.entities.Product;
+import com.app.responses.ProductBoResponse;
 
 public interface IProductService {
 
@@ -22,4 +25,6 @@ public interface IProductService {
 	Product fetchProductUsingBarCode(String barCode);
 	
 	Product fetchProductWithBarCode(String barCode);
+	
+	ProductBoResponse fetchProducts(PageRequest pageRequest);
 }

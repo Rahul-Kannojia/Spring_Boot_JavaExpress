@@ -18,12 +18,17 @@ import lombok.ToString;
 @ToString
 public class Student {
 	
+	
+	/**
+	 * allocationSize  is the incremental value of Sequence Generator
+	 * */
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY,generator = "std_gen")
-	@SequenceGenerator(name = "std_gen",initialValue = 1,allocationSize = 1,sequenceName = "std_seq")
-	private Integer studentId;
+	@GeneratedValue(strategy = GenerationType.AUTO,generator = "stud_gen")
+	@SequenceGenerator(name = "stud_gen",sequenceName = "stud_seq",initialValue = 1,allocationSize = 1)
+	private Long studentId;
 	private String studentName;
 	private String department;
+	private Long studentIdCardNumber;
 	
 	/**
 	 * One instance of Student have One instance of Address

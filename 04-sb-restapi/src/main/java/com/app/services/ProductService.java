@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.app.entities.Category;
@@ -11,6 +13,7 @@ import com.app.entities.Product;
 import com.app.exception.ResourceNotFoundException;
 import com.app.repositories.CategoryRepository;
 import com.app.repositories.ProductRepository;
+import com.app.responses.ProductBoResponse;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -120,5 +123,16 @@ public class ProductService implements IProductService {
 	public Product fetchProductWithBarCode(String barCode) {
 		log.info("ProductService :: fetchProductWithBarCode {}", barCode);
 		return productRepository.findByBarCode(barCode);
+	}
+
+	@Override
+	public ProductBoResponse fetchProducts(PageRequest pageRequest) {
+		log.info("ProductService :: fetchProducts:: Pagination ");
+		Page<Product> page = productRepository.findAll(pageRequest);
+		ProductBoResponse productBoResponse = new ProductBoResponse();
+		productBoResponse.setTotalPageNumber(page.getTotalPages());
+		productBoResponse.setTotalNumberOfElements(page.getTotalElements());
+		productBoResponse.setProducts(page.getContent());
+		return productBoResponse;
 	}
 }

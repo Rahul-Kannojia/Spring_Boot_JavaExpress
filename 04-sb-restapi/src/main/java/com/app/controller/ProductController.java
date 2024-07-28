@@ -1,8 +1,11 @@
 package com.app.controller;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,10 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.entities.Product;
+import com.app.responses.ProductBoResponse;
 import com.app.services.ProductService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -76,4 +81,40 @@ public class ProductController {
 		log.info("ProductController ::fetchProductWithBarCode {} ", barCode);
 		return productService.fetchProductWithBarCode(barCode);
 	}
+	
+	/**
+	 * Pagination
+	 * */
+	@GetMapping("/pagination")
+	public ProductBoResponse fetchProducts(@RequestParam(defaultValue = "0") Integer pageNumber,
+			@RequestParam(defaultValue = "5") Integer pageSize,
+			@RequestParam(defaultValue = "DESC") String sortBy) {
+		log.info("ProductController ::fetchProducts :: Pagination " );
+		if(sortBy.equals("ASC")) {
+			return productService.fetchProducts(PageRequest.of(pageNumber, pageSize, Direction.ASC,"price"));
+		}else {
+			return productService.fetchProducts(PageRequest.of(pageNumber, pageSize, Direction.DESC,"price"));
+		}
+	}
+	
+	/**
+	 * Pagination:
+	 * public static PageRequest of(int pageNumber, int pageSize, Direction direction, String... properties)
+	 * */
+//	@GetMapping("/pagination")
+//	public ProductBoResponse fetchProducts(@RequestParam(defaultValue = "0") Integer pageNumber,
+//			@RequestParam(defaultValue = "5") Integer pageSize, @RequestParam(defaultValue = "DESC") String sortBy,
+//			@RequestParam(defaultValue = "price") String[] stringArray) {
+//		log.info("ProductController ::fetchProducts :: Pagination ");
+//		List<String> sortingList = List.of("price","name");
+//		stringArray = sortingList.stream().toArray(String[]::new);
+//		
+//		if (sortBy.equals("ASC")) {
+//			return productService.fetchProducts(
+//					PageRequest.of(pageNumber, pageSize, Direction.ASC, stringArray));
+//		} else {
+//			return productService.fetchProducts(
+//					PageRequest.of(pageNumber, pageSize, Direction.DESC, stringArray));
+//		}
+//	}
 }
